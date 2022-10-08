@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="namespace" default="wamv"/>
+
+  <node pkg="robotx_2022" type="boat_twist.py" name="boat_twist" output="screen">
+  </node>
+
+  <node pkg="robotx_2022" type="wamv_dk_functions.py" name="wamv_dk_functions" output="screen">
+                                    <!--x y z th speed turn--> 
+    <param name="input_vel_cmds" value="1.0 0.0 0.0 1.0 0.5 0.0"/>
+    <param name="iter_num" value="0"/>
+    <remap from="left_thrust_angle" to="/$(arg namespace)/thrusters/left_thrust_angle"/>
+    <remap from="right_thrust_angle" to="/$(arg namespace)/thrusters/right_thrust_angle"/>
+    <remap from="left_thrust_cmd" to="/$(arg namespace)/thrusters/left_thrust_cmd"/>
+    <remap from="right_thrust_cmd" to="/$(arg namespace)/thrusters/right_thrust_cmd"/>
+  </node>
+  <!--
+  <node pkg="robotx_2022" type="spare_node.py" name="fake_takeoff" output="screen">
+    <param name="turn_on" value="1"/>
+  </node>
+  -->
+</launch>

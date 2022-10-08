@@ -1,0 +1,310 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <world name="default">
+<!--     <wind>
+      <linear_velocity>0.0 0.0 0.0</linear_velocity>
+    </wind> -->
+    <scene>
+      <shadows>0</shadows>
+    </scene>
+    <gui>
+      <camera name="user_camera">
+        <pose>0 -5 1 0 0.2 1.5708</pose>
+      </camera>
+    </gui>
+    <physics type="ode">
+      <ode>
+        <solver>
+          <type>quick</type>
+          <iters>100</iters>
+          <sor>1.0</sor>
+        </solver>
+        <constraints>
+          <cfm>0.0</cfm>
+          <erp>0.2</erp>
+          <contact_max_correcting_vel>0.1</contact_max_correcting_vel>
+          <contact_surface_layer>0.0</contact_surface_layer>
+        </constraints>
+      </ode>
+      <real_time_update_rate>-1</real_time_update_rate>
+      <!--<max_step_size>0.0020</max_step_size>-->
+    </physics>
+    <gravity>0 0 -9.8</gravity>
+    <include>
+      <uri>model://sun</uri>
+    </include>
+
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>5000 5000</size>
+            </plane>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>100</mu>
+                <mu2>50</mu2>
+              </ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="background">
+          <pose>000 0 -.1 0 0 0</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>50 50</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Grass</name>
+            </script>
+          </material>
+        </visual>
+<!--
+        <visual name="qrcode1">
+          <pose>0 0 .005 0 0 0</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>.4 .4</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Aruco129</name>
+            </script>
+          </material>
+        </visual>
+
+        <visual name="qrcode2">
+          <pose>0.2 -.5 .004 0 0 0</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>.2 .2</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Aruco72</name>
+            </script>
+          </material>
+        </visual>
+
+
+         <visual name="qrcode3">
+          <pose>0.125 -.3 .004 0 0 0</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>.05 .05</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Aruco72</name>
+            </script>
+          </material>
+        </visual> -->
+
+      </link>
+    </model>
+    <model name="landing_pad_filled">
+      <static>true</static>
+      <link name="landing_pad_filled_link">
+        <pose>5 10 .15 0 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>2 2 .3</size>
+            </box>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>100</mu>
+                <mu2>50</mu2>
+              </ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="landing_pad_filled_visual">
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <mesh>
+              <scale>.5 .5 .5</scale>
+              <uri>model://landing_pad/meshes/Landing_Pad_Mesh.dae</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <shader type='pixel'/>
+          </material>
+          <transparency>0</transparency>
+        </visual>
+      </link>
+    </model>
+    <model name="tin_red">
+      <static>false</static>
+      <link name="tin_red_link">
+        <pose>5 10.2828 .3135 0 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+              <radius>0.0421</radius>
+              <length>0.027</length>
+            </cylinder>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>100</mu>
+                <mu2>50</mu2>
+              </ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="tin_red_visual">
+          <pose>0 0 0 0 0 0</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <cylinder>
+              <radius>0.0421</radius>
+              <length>0.027</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Red</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="tin_blue">
+      <static>false</static>
+      <link name="tin_blue_link">
+        <pose>5.2 9.8 .3135 0 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+              <radius>0.0421</radius>
+              <length>0.027</length>
+            </cylinder>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>100</mu>
+                <mu2>50</mu2>
+              </ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="tin_blue_visual">
+          <pose>0 0 0 0 0 0</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <cylinder>
+              <radius>0.0421</radius>
+              <length>0.027</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Blue</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="tin_green">
+      <static>false</static>
+      <link name="tin_green_link">
+        <pose>4.8 9.8 .3135 0 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+              <radius>0.0421</radius>
+              <length>0.027</length>
+            </cylinder>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>100</mu>
+                <mu2>50</mu2>
+              </ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="tin_green_visual">
+          <pose>0 0 0 0 0 0</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <cylinder>
+              <radius>0.0421</radius>
+              <length>0.027</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Green</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="landing_pad_empty">
+      <static>true</static>
+      <link name="landing_pad_empty_link">
+        <pose>-10 5 .15 0 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>2 2 .3</size>
+            </box>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>100</mu>
+                <mu2>50</mu2>
+              </ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="landing_pad_empty_visual">
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <mesh>
+              <scale>.5 .5 .5</scale>
+              <uri>model://landing_pad/meshes/Landing_Pad_Mesh.dae</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <shader type='pixel'/>
+          </material>
+          <transparency>0</transparency>
+        </visual>
+      </link>
+    </model>
+  </world>
+</sdf>

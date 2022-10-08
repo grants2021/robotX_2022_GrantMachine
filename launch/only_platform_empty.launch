@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<launch>
+  <env name="ROSCONSOLE_CONFIG_FILE" value="$(find vrx_gazebo)/config/custom_rosconsole.conf"/>
+  <!-- these are the arguments you can pass this launch file, for example paused:=true -->
+  <arg name="paused" default="false"/>
+  <arg name="use_sim_time" default="false"/>
+  <arg name="extra_gazebo_args" default=""/>
+  <arg name="gui" default="true"/>
+  <arg name="recording" default="false"/>
+  <!-- Note that 'headless' is currently non-functional.  See gazebo_ros_pkgs issue #491 (-r arg does not disable
+       rendering, but instead enables recording). The arg definition has been left here to prevent breaking downstream
+       launch files, but it does nothing. -->
+  <arg name="headless" default="false"/>
+  <arg name="debug" default="false"/>
+  <arg name="physics" default="ode"/>
+  <arg name="verbose" default="false"/>
+  <arg name="output" default="screen"/>
+  <arg name="world_name" default="flat_ocean.world"/> <!-- Note: the world_name is with respect to GAZEBO_RESOURCE_PATH environmental variable -->
+  <arg name="respawn_gazebo" default="false"/>
+  <arg name="use_clock_frequency" default="false"/>
+  <arg name="pub_clock_frequency" default="100"/>
+  <arg name="enable_ros_network" default="true" />
+  <arg name="server_required" default="false"/>
+  <arg name="gui_required" default="false"/>
+  <arg name="wamv_locked" default="false" />
+  <arg name="thrust_config" default="H" />
+  <arg name="vrx_sensors_enabled" default="false" />
+  <arg name="namespace" default="wamv"/>
+  <arg name="platform_namespace" default="platform"/>
+  
+  
+  <!-- Initial USV location and attitude-->
+  <arg name="x" default="0" />
+  <arg name="y" default="0" />
+  <arg name="z" default="0" />
+  <arg name="P" default="0" />
+  <arg name="R" default="0" />
+  <arg name="Y" default="0" />
+  
+  <!-- set use_sim_time flag -->
+  <param name="/use_sim_time" value="$(arg use_sim_time)"/>
+
+  <!-- set command arguments -->
+  <arg unless="$(arg paused)" name="command_arg1" value=""/>
+  <arg     if="$(arg paused)" name="command_arg1" value="-u"/>
+  <arg unless="$(arg recording)" name="command_arg2" value=""/>
+  <arg     if="$(arg recording)" name="command_arg2" value="-r"/>
+  <arg unless="$(arg verbose)" name="command_arg3" value=""/>
+  <arg     if="$(arg verbose)" name="command_arg3" value="--verbose"/>
+  <arg unless="$(arg debug)" name="script_type" value="gzserver"/>
+  <arg     if="$(arg debug)" name="script_type" value="debug"/>
+
+  <!-- start gazebo server-->
+  <group if="$(arg use_clock_frequency)">
+    <param name="gazebo/pub_clock_frequency" value="$(arg pub_clock_frequency)" />
+  </group>
+  <group>
+    <param name="gazebo/enable_ros_network" value="$(arg enable_ros_network)" />
+  </group>
+  <node name="gazebo" pkg="gazebo_ros" type="$(arg script_type)" respawn="$(arg respawn_gazebo)" output="$(arg output)"
+	args="$(arg command_arg1) $(arg command_arg2) $(arg command_arg3) -e $(arg physics) $(arg extra_gazebo_args) $(arg world_name)"
+  required="$(arg server_required)" />
+
+  <!-- start gazebo client -->
+  <group if="$(arg gui)">
+    <node name="gazebo_gui" pkg="gazebo_ros" type="gzclient" respawn="false" output="$(arg output)" args="$(arg command_arg3)"
+    required="$(arg gui_required)"/>
+  </group>
+  
+  <!-- Spawning WAMV URDF -->
+  <arg name="urdf" default="$(find wamv_gazebo)/urdf/wamv_gazebo.urdf.xacro"/>
+  <param name="$(arg namespace)/robot_description"
+         command="$(find xacro)/xacro &#x002D;&#x002D;inorder '$(arg urdf)'
+         locked:=$(arg wamv_locked)
+         thruster_config:=$(arg thrust_config)
+         vrx_sensors_enabled:=$(arg vrx_sensors_enabled)
+         namespace:=$(arg namespace) "/>
+
+  <!-- Spawn WAMV model in Gazebo -->
+  <node name="spawn_wamv" pkg="gazebo_ros" type="spawn_model"
+        args="-x $(arg x) -y $(arg y) -z $(arg z)
+              -R $(arg R) -P $(arg P) -Y $(arg Y)
+              -urdf -param $(arg namespace)/robot_description -model wamv "/>
+              
+              
+  <!-- Old version of WAMV import
+  <node name="spawn_wamv" pkg="gazebo_ros" type="spawn_model"
+        args="-x $(arg x) -y $(arg y) -z $(arg z)
+              -R $(arg R) -P $(arg P) -Y $(arg Y)
+              -urdf -file /home/grant/vrx_ws/src/adept-vrx/wamv_gazebo/urdf/wamv_gazebo.urdf -model wamv "/>
+  -->
+  
+  <!-- Platform Import -->
+  <arg name="platform_urdf" default="$(find wamv_gazebo)/urdf/platform.urdf.xacro"/>
+  <param name="$(arg platform_namespace)/robot_description"
+         command="$(find xacro)/xacro &#x002D;&#x002D;inorder '$(arg platform_urdf)'
+         namespace:=$(arg platform_namespace) "/>
+
+  <!-- Spawn WAMV model in Gazebo
+  <node name="spawn_platform" pkg="gazebo_ros" type="spawn_model"
+        args="-x $(arg x) -y $(arg y) -z $(arg z)
+              -R $(arg R) -P $(arg P) -Y $(arg Y)
+              -urdf -param $(arg platform_namespace)/robot_description -model platform "/>
+   -->
+  
+  
+  <!-- Old version of WAMV import
+  <node name="spawn_wamv" pkg="gazebo_ros" type="spawn_model"
+        args="-x 0 -y 0 -z 0
+              -R 0 -P 0 -Y 0
+              -sdf -file /home/grant/vrx_ws/src/adept-vrx/robotX_2022/models/QR_wamv/model.sdf -model wamvQR"/>
+  
+                
+  <node name="spawn_drone" pkg="gazebo_ros" type="spawn_model"
+        args="-x 0 -y 0 -z 1.35
+              -R 0 -P 0 -Y 0
+              -sdf -file /home/grant/ardupilot_gazebo/models/iris_with_ardupilot/model.sdf -model iris_demo"/>
+  -->
+</launch>
