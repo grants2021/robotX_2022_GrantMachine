@@ -1067,7 +1067,11 @@ class Drone:
         return True
         #sys.exit()
         #rospy.spin()
-        
+     
+    
+#%% 
+#################   QUICK LAUNCH   #################
+
 username = os.getlogin()
 
 def launcher(launchID, qrttag, launchName):

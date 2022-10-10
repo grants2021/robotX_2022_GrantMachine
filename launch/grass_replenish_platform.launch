@@ -83,19 +83,7 @@
               -R $(arg R) -P $(arg P) -Y $(arg Y)
               -urdf -param $(arg namespace)/robot_description -model wamv "/>
      -->         
-              
-  <!-- Old version of WAMV import
-  <node name="spawn_wamv" pkg="gazebo_ros" type="spawn_model"
-        args="-x $(arg x) -y $(arg y) -z $(arg z)
-              -R $(arg R) -P $(arg P) -Y $(arg Y)
-              -urdf -file /home/grant/vrx_ws/src/adept-vrx/wamv_gazebo/urdf/wamv_gazebo.urdf -model wamv "/>
-  -->
-  
-  <!-- Old version of WAMV import
-  <node name="spawn_wamv" pkg="gazebo_ros" type="spawn_model"
-        args="-x 0 -y 0 -z 0
-              -R 0 -P 0 -Y 0
-              -sdf -file /home/grant/vrx_ws/src/adept-vrx/robotX_2022/models/QR_wamv/model.sdf -model wamvQR"/>
+             
   -->
         <!-- Spawning Drone   -->     
   <node name="spawn_drone" pkg="gazebo_ros" type="spawn_model"
